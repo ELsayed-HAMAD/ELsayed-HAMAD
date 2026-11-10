@@ -56,13 +56,12 @@ function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").rep
 const CHIP = { h: 25, padX: 10, gap: 7, rowGap: 8, font: 11, weight: 500, radius: 6 };
 
 // One place for every card measurement. Lower these together to shrink the cards.
+// The TOOLS counter and the subtitle lines are intentionally not rendered.
 const S = {
   pad: 18, gapY: 14, radius: 12,
   iconBox: 36, iconRadius: 10, iconInset: 8, iconSize: 20, iconTop: 15,
-  counterFont: 9, counterLS: 1.5, counterBase: 21,
-  titleBase: 84, titleFont: 17,
-  subBase: 101, subFont: 11,
-  chipsTop: 116, bottom: 16,
+  titleBase: 75, titleFont: 17,
+  chipsTop: 89, bottom: 15,
   chipTextBase: 17.4
 };
 
@@ -116,15 +115,8 @@ function cardMarkup(x, y, w, h, card, pal){
        '" stroke="' + card.accent + '" stroke-opacity="0.55"/>';
   s += iconMarkup(card.icon, x + S.pad + S.iconInset, y + S.iconTop + S.iconInset, S.iconSize, card.accent);
 
-  const count = String(card.chips.length).padStart(2, "0") + " TOOLS";
-  s += '<text x="' + (x + w - S.pad) + '" y="' + (y + S.iconTop + S.counterBase) + '" text-anchor="end" font-family="' + MONO +
-       '" font-size="' + S.counterFont + '" letter-spacing="' + S.counterLS + '" fill="' + pal.counter + '">' + esc(count) + '</text>';
-
   s += '<text x="' + (x + S.pad) + '" y="' + (y + S.titleBase) + '" font-family="' + FONT +
        '" font-size="' + S.titleFont + '" font-weight="600" letter-spacing="-0.2" fill="' + pal.title + '">' + esc(card.title) + '</text>';
-
-  s += '<text x="' + (x + S.pad) + '" y="' + (y + S.subBase) + '" font-family="' + FONT +
-       '" font-size="' + S.subFont + '" fill="' + pal.sub + '">' + esc(card.sub) + '</text>';
 
   let cy = y + S.chipsTop;
   rows.forEach(function(r, ri){
