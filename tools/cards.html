@@ -53,7 +53,18 @@ function tw(text, weight, size){
 }
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-const CHIP = { h: 29, padX: 11, gap: 8, rowGap: 9, font: 12, weight: 500 };
+const CHIP = { h: 25, padX: 10, gap: 7, rowGap: 8, font: 11, weight: 500, radius: 6 };
+
+// One place for every card measurement. Lower these together to shrink the cards.
+const S = {
+  pad: 18, gapY: 14, radius: 12,
+  iconBox: 36, iconRadius: 10, iconInset: 8, iconSize: 20, iconTop: 15,
+  counterFont: 9, counterLS: 1.5, counterBase: 21,
+  titleBase: 84, titleFont: 17,
+  subBase: 101, subFont: 11,
+  chipsTop: 116, bottom: 16,
+  chipTextBase: 17.4
+};
 
 function packChips(chips, innerW){
   const rows = []; let row = []; let x = 0;
@@ -67,11 +78,10 @@ function packChips(chips, innerW){
   return rows;
 }
 
-const CARD = { pad: 22, iconBox: 45, iconRadius: 12, gapX: 24, gapY: 16, radius: 14 };
-const GEO  = { iconTop: 22, titleBase: 102, subBase: 126, chipsTop: 146, bottom: 22 };
+const CARD = { gapX: 24, gapY: S.gapY };
 
 function rowsHeight(n){ return n * CHIP.h + (n - 1) * CHIP.rowGap; }
-function cardHeightFor(rows, chipsTop){ return chipsTop + rowsHeight(rows) + GEO.bottom; }
+function cardHeightFor(rows){ return S.chipsTop + rowsHeight(rows) + S.bottom; }
 
 function iconMarkup(name, ox, oy, size, color){
   const s = size / 24;
@@ -94,31 +104,31 @@ function iconMarkup(name, ox, oy, size, color){
 }
 
 function cardMarkup(x, y, w, h, card, pal){
-  const innerW = w - CARD.pad * 2;
+  const innerW = w - S.pad * 2;
   const rows = packChips(card.chips, innerW);
   let s = "";
 
   s += '<rect x="' + (x + 0.5) + '" y="' + (y + 0.5) + '" width="' + (w - 1) + '" height="' + (h - 1) +
-       '" rx="' + CARD.radius + '" fill="' + pal.card + '" stroke="' + pal.cardBorder + '"/>';
+       '" rx="' + S.radius + '" fill="' + pal.card + '" stroke="' + pal.cardBorder + '"/>';
 
-  s += '<rect x="' + (x + CARD.pad + 0.5) + '" y="' + (y + GEO.iconTop + 0.5) + '" width="' + (CARD.iconBox - 1) +
-       '" height="' + (CARD.iconBox - 1) + '" rx="' + CARD.iconRadius + '" fill="' + pal.iconBg +
+  s += '<rect x="' + (x + S.pad + 0.5) + '" y="' + (y + S.iconTop + 0.5) + '" width="' + (S.iconBox - 1) +
+       '" height="' + (S.iconBox - 1) + '" rx="' + S.iconRadius + '" fill="' + pal.iconBg +
        '" stroke="' + card.accent + '" stroke-opacity="0.55"/>';
-  s += iconMarkup(card.icon, x + CARD.pad + 10.5, y + GEO.iconTop + 10.5, 24, card.accent);
+  s += iconMarkup(card.icon, x + S.pad + S.iconInset, y + S.iconTop + S.iconInset, S.iconSize, card.accent);
 
   const count = String(card.chips.length).padStart(2, "0") + " TOOLS";
-  s += '<text x="' + (x + w - CARD.pad) + '" y="' + (y + GEO.iconTop + 26) + '" text-anchor="end" font-family="' + MONO +
-       '" font-size="10" letter-spacing="1.7" fill="' + pal.counter + '">' + esc(count) + '</text>';
+  s += '<text x="' + (x + w - S.pad) + '" y="' + (y + S.iconTop + S.counterBase) + '" text-anchor="end" font-family="' + MONO +
+       '" font-size="' + S.counterFont + '" letter-spacing="' + S.counterLS + '" fill="' + pal.counter + '">' + esc(count) + '</text>';
 
-  s += '<text x="' + (x + CARD.pad) + '" y="' + (y + GEO.titleBase) + '" font-family="' + FONT +
-       '" font-size="21" font-weight="600" letter-spacing="-0.3" fill="' + pal.title + '">' + esc(card.title) + '</text>';
+  s += '<text x="' + (x + S.pad) + '" y="' + (y + S.titleBase) + '" font-family="' + FONT +
+       '" font-size="' + S.titleFont + '" font-weight="600" letter-spacing="-0.2" fill="' + pal.title + '">' + esc(card.title) + '</text>';
 
-  s += '<text x="' + (x + CARD.pad) + '" y="' + (y + GEO.subBase) + '" font-family="' + FONT +
-       '" font-size="12.5" fill="' + pal.sub + '">' + esc(card.sub) + '</text>';
+  s += '<text x="' + (x + S.pad) + '" y="' + (y + S.subBase) + '" font-family="' + FONT +
+       '" font-size="' + S.subFont + '" fill="' + pal.sub + '">' + esc(card.sub) + '</text>';
 
-  let cy = y + GEO.chipsTop;
+  let cy = y + S.chipsTop;
   rows.forEach(function(r, ri){
-    let cxp = x + CARD.pad;
+    let cxp = x + S.pad;
     r.forEach(function(c, ci){
       const featured = (ri === 0 && ci === 0);
       const bg = featured ? pal.chipFgBg : pal.chipBg;
@@ -126,8 +136,8 @@ function cardMarkup(x, y, w, h, card, pal){
       const fg = featured ? pal.chipFgText : pal.chipText;
       const bo = featured ? ' stroke-opacity="0.9"' : "";
       s += '<rect x="' + (cxp + 0.5) + '" y="' + (cy + 0.5) + '" width="' + (c.w - 1) + '" height="' + (CHIP.h - 1) +
-           '" rx="7" fill="' + bg + '" stroke="' + bd + '"' + bo + '/>';
-      s += '<text x="' + (cxp + c.w / 2) + '" y="' + (cy + 19.2) + '" text-anchor="middle" font-family="' + FONT +
+           '" rx="' + CHIP.radius + '" fill="' + bg + '" stroke="' + bd + '"' + bo + '/>';
+      s += '<text x="' + (cxp + c.w / 2) + '" y="' + (cy + S.chipTextBase) + '" text-anchor="middle" font-family="' + FONT +
            '" font-size="' + CHIP.font + '" font-weight="' + CHIP.weight + '" fill="' + fg + '">' + esc(c.t) + '</text>';
       cxp += c.w + CHIP.gap;
     });
@@ -142,22 +152,9 @@ function svgOpen(w, h, label){
          '" role="img" aria-label="' + esc(label) + '">';
 }
 
-function buildStackWide(pal){
-  const innerW = 277 - CARD.pad * 2;
-  let maxRows = 1;
-  CARDS.forEach(function(c){ maxRows = Math.max(maxRows, packChips(c.chips, innerW).length); });
-  const h = cardHeightFor(maxRows, GEO.chipsTop);
-
-  let s = svgOpen(1180, h, "Tech stack and tools");
-  CARDS.forEach(function(c, i){
-    s += cardMarkup(i * (277 + CARD.gapX), 0, 277, h, c, pal);
-  });
-  return s + '</svg>';
-}
-
 function buildStackColumn(W, pal){
-  const innerW = W - CARD.pad * 2;
-  const heights = CARDS.map(function(c){ return cardHeightFor(packChips(c.chips, innerW).length, GEO.chipsTop); });
+  const innerW = W - S.pad * 2;
+  const heights = CARDS.map(function(c){ return cardHeightFor(packChips(c.chips, innerW).length); });
   const total = heights.reduce(function(a, b){ return a + b; }, 0) + CARD.gapY * (CARDS.length - 1);
 
   let s = svgOpen(W, total, "Tech stack and tools");
