@@ -17,11 +17,8 @@ React.js · React Router · TanStack Query · Zustand · Tailwind CSS · Bootstr
 **Backend**  
 Node.js · Fastify · Prisma · Zod · PostgreSQL
 
-**Testing**  
-Vitest · Playwright
-
 **Tooling**  
-Git · GitHub Actions · pnpm · Turborepo · Docker · Vercel · VS Code
+Git · GitHub Actions · pnpm · Turborepo · Docker · Vercel · VS Code · Vitest · Playwright
 
 ## Contact Me
 
