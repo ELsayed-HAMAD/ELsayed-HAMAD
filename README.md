@@ -17,4 +17,4 @@ I build web products end to end, from the database schema to the interface. Most
 
 ## Contact Me
 
-[elsayedhamad67@gmail.com](mailto:elsayedhamad67@gmail.com) · [LinkedIn](https://www.linkedin.com/in/elsayed-hamad-866340322) · [GitHub](https://github.com/ELsayed-HAMAD)
+[elsayedhamad67@gmail.com](mailto:elsayedhamad67@gmail.com) · [LinkedIn](https://www.linkedin.com/in/elsayed-hamad-866340322)
