@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-label="Elsayed Hamad, full stack developer, Mansoura Egypt">
   <rect width="1200" height="240" fill="#FBFAF8"/>
-  <text x="72" y="124"
+  <text x="72" y="118"
         font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
         font-size="62" font-weight="600" letter-spacing="-2.1" fill="#16150F">Elsayed Hamad</text>
   <text x="74" y="166"
         font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-        font-size="15" font-weight="500" letter-spacing="3.6" fill="#8A8580">FULL STACK DEVELOPER</text>
-  <text x="358" y="166"
+        font-size="25" font-weight="500" letter-spacing="4.6" fill="#6F6A64">FULL STACK DEVELOPER</text>
+  <circle cx="516" cy="157" r="3.5" fill="#C9C2B9"/>
+  <text x="540" y="166"
         font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-        font-size="15" font-weight="500" letter-spacing="3.6" fill="#C4BEB6">MANSOURA, EGYPT</text>
-  <circle cx="333" cy="161" r="2.5" fill="#C4BEB6"/>
-  <rect x="72" y="196" width="132" height="1.5" fill="#DBD5CD"/>
+        font-size="25" font-weight="500" letter-spacing="4.6" fill="#6F6A64">MANSOURA, EGYPT</text>
+  <rect x="72" y="198" width="132" height="1.5" fill="#DFD8D0"/>
 </svg>
