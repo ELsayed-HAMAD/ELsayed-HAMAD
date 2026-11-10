@@ -1,14 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-label="Elsayed Hamad, full stack developer, Mansoura Egypt">
-  <rect width="1200" height="240" fill="#0D1117"/>
-  <text x="72" y="118"
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="200" viewBox="0 0 1200 200" role="img" aria-label="Elsayed Hamad, full stack developer, Mansoura Egypt">
+  <style>
+    @media (max-width: 620px) {
+      .sub { font-size: 34px; }
+      .loc, .dot { display: none; }
+    }
+  </style>
+  <rect width="1200" height="200" fill="#0D1117"/>
+  <text x="2" y="102"
         font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-        font-size="62" font-weight="600" letter-spacing="-2.1" fill="#F6F4F1">Elsayed Hamad</text>
-  <text x="74" y="166"
+        font-size="88" font-weight="600" letter-spacing="-2.8" fill="#F6F4F1">Elsayed Hamad</text>
+  <text class="sub" x="4" y="158"
         font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-        font-size="25" font-weight="500" letter-spacing="4.6" fill="#8C8781">FULL STACK DEVELOPER</text>
-  <circle cx="516" cy="157" r="3.5" fill="#4A463F"/>
-  <text x="540" y="166"
+        font-size="24" font-weight="500" letter-spacing="4.6" fill="#8C8781">FULL STACK DEVELOPER</text>
+  <circle class="dot" cx="373" cy="149" r="3.6" fill="#4A463F"/>
+  <text class="loc" x="397" y="158"
         font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-        font-size="25" font-weight="500" letter-spacing="4.6" fill="#8C8781">MANSOURA, EGYPT</text>
-  <rect x="72" y="198" width="132" height="1.5" fill="#302C28"/>
+        font-size="24" font-weight="500" letter-spacing="4.6" fill="#8C8781">MANSOURA, EGYPT</text>
 </svg>
