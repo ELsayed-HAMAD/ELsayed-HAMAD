@@ -57,11 +57,13 @@ const CHIP = { h: 25, padX: 10, gap: 7, rowGap: 8, font: 11, weight: 500, radius
 
 // One place for every card measurement. Lower these together to shrink the cards.
 // The TOOLS counter and the subtitle lines are intentionally not rendered.
+// Icon sits on the left; title and chips occupy the space to its right.
 const S = {
   pad: 18, gapY: 14, radius: 12,
-  iconBox: 36, iconRadius: 10, iconInset: 8, iconSize: 20, iconTop: 15,
-  titleBase: 75, titleFont: 17,
-  chipsTop: 89, bottom: 15,
+  iconBox: 34, iconRadius: 10, iconInset: 7, iconSize: 20, iconTop: 26,
+  contentX: 66,
+  titleBase: 33, titleFont: 17,
+  chipsTop: 45, bottom: 16,
   chipTextBase: 17.4
 };
 
@@ -103,7 +105,7 @@ function iconMarkup(name, ox, oy, size, color){
 }
 
 function cardMarkup(x, y, w, h, card, pal){
-  const innerW = w - S.pad * 2;
+  const innerW = w - S.contentX - S.pad;
   const rows = packChips(card.chips, innerW);
   let s = "";
 
@@ -115,12 +117,12 @@ function cardMarkup(x, y, w, h, card, pal){
        '" stroke="' + card.accent + '" stroke-opacity="0.55"/>';
   s += iconMarkup(card.icon, x + S.pad + S.iconInset, y + S.iconTop + S.iconInset, S.iconSize, card.accent);
 
-  s += '<text x="' + (x + S.pad) + '" y="' + (y + S.titleBase) + '" font-family="' + FONT +
+  s += '<text x="' + (x + S.contentX) + '" y="' + (y + S.titleBase) + '" font-family="' + FONT +
        '" font-size="' + S.titleFont + '" font-weight="600" letter-spacing="-0.2" fill="' + pal.title + '">' + esc(card.title) + '</text>';
 
   let cy = y + S.chipsTop;
   rows.forEach(function(r, ri){
-    let cxp = x + S.pad;
+    let cxp = x + S.contentX;
     r.forEach(function(c, ci){
       const featured = (ri === 0 && ci === 0);
       const bg = featured ? pal.chipFgBg : pal.chipBg;
@@ -145,7 +147,9 @@ function svgOpen(w, h, label){
 }
 
 function buildStackColumn(W, pal){
-  const innerW = W - S.pad * 2;
+  // Must match cardMarkup's inner width exactly, or card heights are computed
+  // for a different number of chip rows than are actually drawn.
+  const innerW = W - S.contentX - S.pad;
   const heights = CARDS.map(function(c){ return cardHeightFor(packChips(c.chips, innerW).length); });
   const total = heights.reduce(function(a, b){ return a + b; }, 0) + CARD.gapY * (CARDS.length - 1);
 
