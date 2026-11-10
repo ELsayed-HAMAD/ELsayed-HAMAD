@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>card generator</title></head>
+<body>
+<pre id="out">PENDING</pre>
+<script>
+/* ============================================================
+   EDIT ONLY THIS BLOCK, then run tools/generate-cards.ps1
+   ============================================================ */
+const CARDS = [
+  { title: "Languages", sub: "The foundations",        accent: "#C89553", icon: "code",
+    chips: ["HTML5","CSS3","JavaScript","TypeScript","SQL"] },
+
+  { title: "Frontend",  sub: "Interfaces that feel right", accent: "#5B9BE0", icon: "layers",
+    chips: ["React.js","React Router","TanStack Query","Zustand","Tailwind CSS","Bootstrap","GSAP","Swiper.js"] },
+
+  { title: "Backend",   sub: "Built for what's next",  accent: "#4FAE85", icon: "server",
+    chips: ["Node.js","Fastify","Prisma","Zod","PostgreSQL"] },
+
+  { title: "Tooling",   sub: "A better way to build",  accent: "#9B7FE0", icon: "wand",
+    chips: ["Git","GitHub Actions","pnpm","Turborepo","Docker","Vercel","VS Code"] }
+];
+
+const CONTACT = [
+  { file: "contact-email",    icon: "mail",     label: "EMAIL",    value: "elsayedhamad67@gmail.com" },
+  { file: "contact-linkedin", icon: "linkedin", label: "LINKEDIN", value: "Elsayed Hamad" }
+];
+/* ============================================================ */
+
+const FONT = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+
+const P = {
+  dark: {
+    card:"#14161A", cardBorder:"#262B33", iconBg:"#191D22",
+    title:"#F2F4F7", sub:"#8B949E", counter:"#6E7781",
+    chipBg:"#1B1F25", chipBorder:"#2C323B", chipText:"#AEB6C0",
+    chipFgBg:"#22262D", chipFgText:"#F2F4F7", neutral:"#8B949E"
+  },
+  light: {
+    card:"#FBFAF8", cardBorder:"#E5E1D9", iconBg:"#FFFFFF",
+    title:"#16150F", sub:"#6F6A64", counter:"#9A948B",
+    chipBg:"#F5F3EF", chipBorder:"#E3DFD7", chipText:"#6B665F",
+    chipFgBg:"#FFFFFF", chipFgText:"#16150F", neutral:"#6F6A64"
+  }
+};
+
+const cv = document.createElement("canvas");
+const cx2 = cv.getContext("2d");
+function tw(text, weight, size){
+  cx2.font = weight + " " + size + "px " + FONT;
+  return cx2.measureText(text).width;
+}
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+const CHIP = { h: 29, padX: 11, gap: 8, rowGap: 9, font: 12, weight: 500 };
+
+function packChips(chips, innerW){
+  const rows = []; let row = []; let x = 0;
+  for (const c of chips){
+    const w = Math.ceil(tw(c, CHIP.weight, CHIP.font)) + CHIP.padX * 2;
+    if (row.length && x + w > innerW){ rows.push(row); row = []; x = 0; }
+    row.push({ t: c, w: w });
+    x += w + CHIP.gap;
+  }
+  if (row.length) rows.push(row);
+  return rows;
+}
+
+const CARD = { pad: 22, iconBox: 45, iconRadius: 12, gapX: 24, gapY: 16, radius: 14 };
+const GEO  = { iconTop: 22, titleBase: 102, subBase: 126, chipsTop: 146, bottom: 22 };
+
+function rowsHeight(n){ return n * CHIP.h + (n - 1) * CHIP.rowGap; }
+function cardHeightFor(rows, chipsTop){ return chipsTop + rowsHeight(rows) + GEO.bottom; }
+
+function iconMarkup(name, ox, oy, size, color){
+  const s = size / 24;
+  let body = "";
+  if (name === "code") body =
+    '<path d="M9.2 6.8 4.4 12l4.8 5.2"/><path d="M14.8 6.8 19.6 12l-4.8 5.2"/>';
+  else if (name === "layers") body =
+    '<path d="M12 3.6 3.4 8.2 12 12.8l8.6-4.6L12 3.6z"/><path d="M3.4 12.4 12 17l8.6-4.6"/><path d="M3.4 16.4 12 21l8.6-4.6"/>';
+  else if (name === "server") body =
+    '<rect x="3.6" y="4.6" width="16.8" height="6" rx="1.8"/><rect x="3.6" y="13.4" width="16.8" height="6" rx="1.8"/><path d="M7.2 7.6h.01"/><path d="M7.2 16.4h.01"/>';
+  else if (name === "wand") body =
+    '<path d="M4.4 19.6 13 11"/><path d="M16.4 3.4v4"/><path d="M14.4 5.4h4"/><path d="M19.6 10.2v2.6"/><path d="M18.3 11.5h2.6"/>';
+  else if (name === "mail") body =
+    '<rect x="2.8" y="5" width="18.4" height="14" rx="2.6"/><path d="M3.6 7 12 13l8.4-6"/>';
+  else if (name === "linkedin") body =
+    '<rect x="3.4" y="3.4" width="17.2" height="17.2" rx="4.2"/><path d="M7.8 10.6v6.2"/><path d="M7.8 8.1h.01"/><path d="M11.8 16.8v-3.4a2.4 2.4 0 0 1 4.8 0v3.4"/>';
+
+  return '<g transform="translate(' + ox + ',' + oy + ') scale(' + s + ')" fill="none" stroke="' + color +
+         '" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + body + '</g>';
+}
+
+function cardMarkup(x, y, w, h, card, pal){
+  const innerW = w - CARD.pad * 2;
+  const rows = packChips(card.chips, innerW);
+  let s = "";
+
+  s += '<rect x="' + (x + 0.5) + '" y="' + (y + 0.5) + '" width="' + (w - 1) + '" height="' + (h - 1) +
+       '" rx="' + CARD.radius + '" fill="' + pal.card + '" stroke="' + pal.cardBorder + '"/>';
+
+  s += '<rect x="' + (x + CARD.pad + 0.5) + '" y="' + (y + GEO.iconTop + 0.5) + '" width="' + (CARD.iconBox - 1) +
+       '" height="' + (CARD.iconBox - 1) + '" rx="' + CARD.iconRadius + '" fill="' + pal.iconBg +
+       '" stroke="' + card.accent + '" stroke-opacity="0.55"/>';
+  s += iconMarkup(card.icon, x + CARD.pad + 10.5, y + GEO.iconTop + 10.5, 24, card.accent);
+
+  const count = String(card.chips.length).padStart(2, "0") + " TOOLS";
+  s += '<text x="' + (x + w - CARD.pad) + '" y="' + (y + GEO.iconTop + 26) + '" text-anchor="end" font-family="' + MONO +
+       '" font-size="10" letter-spacing="1.7" fill="' + pal.counter + '">' + esc(count) + '</text>';
+
+  s += '<text x="' + (x + CARD.pad) + '" y="' + (y + GEO.titleBase) + '" font-family="' + FONT +
+       '" font-size="21" font-weight="600" letter-spacing="-0.3" fill="' + pal.title + '">' + esc(card.title) + '</text>';
+
+  s += '<text x="' + (x + CARD.pad) + '" y="' + (y + GEO.subBase) + '" font-family="' + FONT +
+       '" font-size="12.5" fill="' + pal.sub + '">' + esc(card.sub) + '</text>';
+
+  let cy = y + GEO.chipsTop;
+  rows.forEach(function(r, ri){
+    let cxp = x + CARD.pad;
+    r.forEach(function(c, ci){
+      const featured = (ri === 0 && ci === 0);
+      const bg = featured ? pal.chipFgBg : pal.chipBg;
+      const bd = featured ? card.accent : pal.chipBorder;
+      const fg = featured ? pal.chipFgText : pal.chipText;
+      const bo = featured ? ' stroke-opacity="0.9"' : "";
+      s += '<rect x="' + (cxp + 0.5) + '" y="' + (cy + 0.5) + '" width="' + (c.w - 1) + '" height="' + (CHIP.h - 1) +
+           '" rx="7" fill="' + bg + '" stroke="' + bd + '"' + bo + '/>';
+      s += '<text x="' + (cxp + c.w / 2) + '" y="' + (cy + 19.2) + '" text-anchor="middle" font-family="' + FONT +
+           '" font-size="' + CHIP.font + '" font-weight="' + CHIP.weight + '" fill="' + fg + '">' + esc(c.t) + '</text>';
+      cxp += c.w + CHIP.gap;
+    });
+    cy += CHIP.h + CHIP.rowGap;
+  });
+
+  return s;
+}
+
+function svgOpen(w, h, label){
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h +
+         '" role="img" aria-label="' + esc(label) + '">';
+}
+
+function buildStackWide(pal){
+  const innerW = 277 - CARD.pad * 2;
+  let maxRows = 1;
+  CARDS.forEach(function(c){ maxRows = Math.max(maxRows, packChips(c.chips, innerW).length); });
+  const h = cardHeightFor(maxRows, GEO.chipsTop);
+
+  let s = svgOpen(1180, h, "Tech stack and tools");
+  CARDS.forEach(function(c, i){
+    s += cardMarkup(i * (277 + CARD.gapX), 0, 277, h, c, pal);
+  });
+  return s + '</svg>';
+}
+
+function buildStackNarrow(pal){
+  const W = 360, innerW = W - CARD.pad * 2;
+  const heights = CARDS.map(function(c){ return cardHeightFor(packChips(c.chips, innerW).length, GEO.chipsTop); });
+  const total = heights.reduce(function(a, b){ return a + b; }, 0) + CARD.gapY * (CARDS.length - 1);
+
+  let s = svgOpen(W, total, "Tech stack and tools");
+  let y = 0;
+  CARDS.forEach(function(c, i){
+    s += cardMarkup(0, y, W, heights[i], c, pal);
+    y += heights[i] + CARD.gapY;
+  });
+  return s + '</svg>';
+}
+
+const CT = { w: 340, h: 104, pad: 20, iconBox: 42, radius: 13 };
+
+function buildContact(item, pal){
+  const label = item.label + ": " + item.value;
+  let s = svgOpen(CT.w, CT.h, label);
+  s += '<rect x="0.5" y="0.5" width="' + (CT.w - 1) + '" height="' + (CT.h - 1) + '" rx="' + CT.radius +
+       '" fill="' + pal.card + '" stroke="' + pal.cardBorder + '"/>';
+  s += '<rect x="' + (CT.pad + 0.5) + '" y="' + (31.5) + '" width="' + (CT.iconBox - 1) + '" height="' + (CT.iconBox - 1) +
+       '" rx="11" fill="' + pal.iconBg + '" stroke="' + pal.neutral + '" stroke-opacity="0.45"/>';
+  s += iconMarkup(item.icon, CT.pad + 9, 40, 24, pal.neutral);
+  s += '<text x="78" y="45" font-family="' + MONO + '" font-size="9.5" letter-spacing="1.8" fill="' + pal.counter + '">' +
+       esc(item.label) + '</text>';
+  s += '<text x="78" y="70" font-family="' + FONT + '" font-size="14" font-weight="600" fill="' + pal.title + '">' +
+       esc(item.value) + '</text>';
+  s += '<path d="M301 47l5 5-5 5" fill="none" stroke="' + pal.neutral + '" stroke-opacity="0.7" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>';
+  return s + '</svg>';
+}
+
+const files = [];
+["dark","light"].forEach(function(t){
+  files.push({ name: "stack-dark.svg",    data: buildStackWide(P[t]) });
+});
+files.length = 0;
+["dark","light"].forEach(function(t){
+  files.push({ name: "stack-" + t + ".svg",         data: buildStackWide(P[t]) });
+  files.push({ name: "stack-narrow-" + t + ".svg",  data: buildStackNarrow(P[t]) });
+  CONTACT.forEach(function(item){
+    files.push({ name: item.file + "-" + t + ".svg", data: buildContact(item, P[t]) });
+  });
+});
+
+const payload = files.map(function(f){
+  return { name: f.name, b64: btoa(unescape(encodeURIComponent(f.data))) };
+});
+document.getElementById("out").textContent = JSON.stringify(payload);
+</script>
+</body>
+</html>
