@@ -11,9 +11,14 @@
    to draw the mark in the theme foreground colour.
    ============================================================ */
 const STACK = [
-  { slug: "react",       name: "React",        dark: "#61DAFB", light: "#087EA4" },
+  { slug: "html5",       name: "HTML5",        dark: "#E34F26", light: "#C93E17" },
+  { slug: "css3",        name: "CSS3",         dark: "#4A9BE0", light: "#1572B6" },
+  { slug: "javascript",  name: "JavaScript",   dark: "#F7DF1E", light: "#A18600" },
   { slug: "typescript",  name: "TypeScript",   dark: "#3178C6", light: "#2F6FB8" },
+  { slug: "react",       name: "React",        dark: "#61DAFB", light: "#087EA4" },
   { slug: "tailwindcss", name: "Tailwind CSS", dark: "#38BDF8", light: "#0E7490" },
+  { slug: "bootstrap",   name: "Bootstrap",    dark: "#A98BE0", light: "#7952B3" },
+  { slug: "gsap",        name: "GSAP",         dark: "#88CE02", light: "#5B8C10" },
   { slug: "nodedotjs",   name: "Node.js",      dark: "#5FA04E", light: "#3C873A" },
   { slug: "fastify",     name: "Fastify",      dark: null,      light: null      },
   { slug: "prisma",      name: "Prisma",       dark: "#8C93F0", light: "#4B55B8" },
@@ -127,9 +132,9 @@ function buildContact(item, pal){
 
 const files = [];
 ["dark","light"].forEach(function(t){
-  // One strip on desktop, two balanced rows on phones.
-  files.push({ name: "logos-" + t + ".svg",        data: buildLogoStrip(860, 10, 64, 14, t, P[t]) });
-  files.push({ name: "logos-narrow-" + t + ".svg", data: buildLogoStrip(360, 5, 56, 12, t, P[t]) });
+  // One row on desktop (15 x 46 + 14 gaps = 830, centred in 860), three rows on phones.
+  files.push({ name: "logos-" + t + ".svg",        data: buildLogoStrip(860, 15, 46, 10, t, P[t]) });
+  files.push({ name: "logos-narrow-" + t + ".svg", data: buildLogoStrip(360, 5, 52, 12, t, P[t]) });
   CONTACT.forEach(function(item){
     files.push({ name: item.file + "-" + t + ".svg", data: buildContact(item, P[t]) });
   });

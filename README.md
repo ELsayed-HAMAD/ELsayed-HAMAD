@@ -10,7 +10,7 @@
   <source media="(prefers-color-scheme: dark) and (max-width: 620px)" srcset="./logos-narrow-dark.svg">
   <source media="(prefers-color-scheme: light) and (max-width: 620px)" srcset="./logos-narrow-light.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./logos-dark.svg">
-  <img src="./logos-light.svg" alt="Tech stack: React, TypeScript, Tailwind CSS, Node.js, Fastify, Prisma, PostgreSQL, Docker, Git, Vercel." width="100%">
+  <img src="./logos-light.svg" alt="Tech stack: HTML5, CSS3, JavaScript, TypeScript, React, Tailwind CSS, Bootstrap, GSAP, Node.js, Fastify, Prisma, PostgreSQL, Docker, Git, Vercel." width="100%">
 </picture>
 
 ## Contact Me
