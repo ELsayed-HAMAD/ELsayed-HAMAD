@@ -98,21 +98,25 @@ function buildLogoStrip(W, cols, tile, gap, mode, pal){
   return s + '</svg>';
 }
 
-const CT = { w: 340, h: 104, pad: 20, iconBox: 42, radius: 13 };
+const CT = { w: 300, h: 90, pad: 17, iconBox: 36, iconRadius: 10, radius: 12, gap: 14 };
 
 function buildContact(item, pal){
   const label = item.label + ": " + item.value;
+  const iconTop = (CT.h - CT.iconBox) / 2;
+  const textX = CT.pad + CT.iconBox + CT.gap;
+  const chevronX = CT.w - 39;
+
   let s = svgOpen(CT.w, CT.h, label);
   s += '<rect x="0.5" y="0.5" width="' + (CT.w - 1) + '" height="' + (CT.h - 1) + '" rx="' + CT.radius +
        '" fill="' + pal.card + '" stroke="' + pal.cardBorder + '"/>';
-  s += '<rect x="' + (CT.pad + 0.5) + '" y="' + (31.5) + '" width="' + (CT.iconBox - 1) + '" height="' + (CT.iconBox - 1) +
-       '" rx="11" fill="' + pal.iconBg + '" stroke="' + pal.neutral + '" stroke-opacity="0.45"/>';
-  s += iconMarkup(item.icon, CT.pad + 9, 40, 24, pal.neutral);
-  s += '<text x="78" y="45" font-family="' + MONO + '" font-size="9.5" letter-spacing="1.8" fill="' + pal.counter + '">' +
+  s += '<rect x="' + (CT.pad + 0.5) + '" y="' + (iconTop + 0.5) + '" width="' + (CT.iconBox - 1) + '" height="' + (CT.iconBox - 1) +
+       '" rx="' + CT.iconRadius + '" fill="' + pal.iconBg + '" stroke="' + pal.neutral + '" stroke-opacity="0.45"/>';
+  s += iconMarkup(item.icon, CT.pad + 7, iconTop + 7, 22, pal.neutral);
+  s += '<text x="' + textX + '" y="40" font-family="' + MONO + '" font-size="9" letter-spacing="1.6" fill="' + pal.counter + '">' +
        esc(item.label) + '</text>';
-  s += '<text x="78" y="70" font-family="' + FONT + '" font-size="14" font-weight="600" fill="' + pal.title + '">' +
+  s += '<text x="' + textX + '" y="63" font-family="' + FONT + '" font-size="12.5" font-weight="600" fill="' + pal.title + '">' +
        esc(item.value) + '</text>';
-  s += '<path d="M301 47l5 5-5 5" fill="none" stroke="' + pal.neutral + '" stroke-opacity="0.7" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>';
+  s += '<path d="M' + chevronX + ' 40l5 5-5 5" fill="none" stroke="' + pal.neutral + '" stroke-opacity="0.7" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>';
   return s + '</svg>';
 }
 
