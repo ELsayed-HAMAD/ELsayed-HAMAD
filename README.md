@@ -7,10 +7,10 @@
 ## Tech Stack and Tools
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 620px)" srcset="./stack-narrow-dark.svg">
-  <source media="(prefers-color-scheme: light) and (max-width: 620px)" srcset="./stack-narrow-light.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="./stack-dark.svg">
-  <img src="./stack-light.svg" alt="Tech stack and tools. Languages: HTML5, CSS3, JavaScript, TypeScript, SQL. Frontend: React.js, React Router, TanStack Query, Zustand, Tailwind CSS, Bootstrap, GSAP, Swiper.js. Backend: Node.js, Fastify, Prisma, Zod, PostgreSQL. Tooling: Git, GitHub Actions, pnpm, Turborepo, Docker, Vercel, VS Code." width="100%">
+  <source media="(prefers-color-scheme: dark) and (max-width: 620px)" srcset="./logos-narrow-dark.svg">
+  <source media="(prefers-color-scheme: light) and (max-width: 620px)" srcset="./logos-narrow-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="./logos-dark.svg">
+  <img src="./logos-light.svg" alt="Tech stack: React, TypeScript, Tailwind CSS, Node.js, Fastify, Prisma, PostgreSQL, Docker, Git, Vercel." width="100%">
 </picture>
 
 ## Contact Me

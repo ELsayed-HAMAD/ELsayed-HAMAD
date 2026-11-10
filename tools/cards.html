@@ -3,22 +3,24 @@
 <head><meta charset="utf-8"><title>card generator</title></head>
 <body>
 <pre id="out">PENDING</pre>
+<script src="logos.js"></script>
 <script>
 /* ============================================================
    EDIT ONLY THIS BLOCK, then run tools/generate-cards.ps1
+   Order here is the order on the strip. Set dark/light to null
+   to draw the mark in the theme foreground colour.
    ============================================================ */
-const CARDS = [
-  { title: "Languages", sub: "The foundations",        accent: "#C89553", icon: "code",
-    chips: ["HTML5","CSS3","JavaScript","TypeScript","SQL"] },
-
-  { title: "Frontend",  sub: "Interfaces that feel right", accent: "#5B9BE0", icon: "layers",
-    chips: ["React.js","React Router","TanStack Query","Zustand","Tailwind CSS","Bootstrap","GSAP","Swiper.js"] },
-
-  { title: "Backend",   sub: "Built for what's next",  accent: "#4FAE85", icon: "server",
-    chips: ["Node.js","Fastify","Prisma","Zod","PostgreSQL"] },
-
-  { title: "Tooling",   sub: "A better way to build",  accent: "#9B7FE0", icon: "wand",
-    chips: ["Git","GitHub Actions","pnpm","Turborepo","Docker","Vercel","VS Code"] }
+const STACK = [
+  { slug: "react",       name: "React",        dark: "#61DAFB", light: "#087EA4" },
+  { slug: "typescript",  name: "TypeScript",   dark: "#3178C6", light: "#2F6FB8" },
+  { slug: "tailwindcss", name: "Tailwind CSS", dark: "#38BDF8", light: "#0E7490" },
+  { slug: "nodedotjs",   name: "Node.js",      dark: "#5FA04E", light: "#3C873A" },
+  { slug: "fastify",     name: "Fastify",      dark: null,      light: null      },
+  { slug: "prisma",      name: "Prisma",       dark: "#8C93F0", light: "#4B55B8" },
+  { slug: "postgresql",  name: "PostgreSQL",   dark: "#5B8BF0", light: "#4169E1" },
+  { slug: "docker",      name: "Docker",       dark: "#2496ED", light: "#1D7BC4" },
+  { slug: "git",         name: "Git",          dark: "#F05032", light: "#D63A1C" },
+  { slug: "vercel",      name: "Vercel",       dark: null,      light: null      }
 ];
 
 const CONTACT = [
@@ -32,70 +34,23 @@ const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
 const P = {
   dark: {
+    tile:"#14161A", tileBorder:"#262B33", fg:"#E6E4E0",
     card:"#14161A", cardBorder:"#262B33", iconBg:"#191D22",
-    title:"#F2F4F7", sub:"#8B949E", counter:"#6E7781",
-    chipBg:"#1B1F25", chipBorder:"#2C323B", chipText:"#AEB6C0",
-    chipFgBg:"#22262D", chipFgText:"#F2F4F7", neutral:"#8B949E"
+    title:"#F2F4F7", counter:"#6E7781", neutral:"#8B949E"
   },
   light: {
+    tile:"#FBFAF8", tileBorder:"#E5E1D9", fg:"#1F1D1A",
     card:"#FBFAF8", cardBorder:"#E5E1D9", iconBg:"#FFFFFF",
-    title:"#16150F", sub:"#6F6A64", counter:"#9A948B",
-    chipBg:"#F5F3EF", chipBorder:"#E3DFD7", chipText:"#6B665F",
-    chipFgBg:"#FFFFFF", chipFgText:"#16150F", neutral:"#6F6A64"
+    title:"#16150F", counter:"#9A948B", neutral:"#6F6A64"
   }
 };
 
-const cv = document.createElement("canvas");
-const cx2 = cv.getContext("2d");
-function tw(text, weight, size){
-  cx2.font = weight + " " + size + "px " + FONT;
-  return cx2.measureText(text).width;
-}
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-const CHIP = { h: 25, padX: 10, gap: 7, rowGap: 8, font: 11, weight: 500, radius: 6 };
-
-// One place for every card measurement. Lower these together to shrink the cards.
-// The TOOLS counter and the subtitle lines are intentionally not rendered.
-// Icon sits on the left; title and chips occupy the space to its right.
-const S = {
-  pad: 18, gapY: 14, radius: 12,
-  iconBox: 34, iconRadius: 10, iconInset: 7, iconSize: 20, iconTop: 26,
-  contentX: 66,
-  titleBase: 33, titleFont: 17,
-  chipsTop: 45, bottom: 16,
-  chipTextBase: 17.4
-};
-
-function packChips(chips, innerW){
-  const rows = []; let row = []; let x = 0;
-  for (const c of chips){
-    const w = Math.ceil(tw(c, CHIP.weight, CHIP.font)) + CHIP.padX * 2;
-    if (row.length && x + w > innerW){ rows.push(row); row = []; x = 0; }
-    row.push({ t: c, w: w });
-    x += w + CHIP.gap;
-  }
-  if (row.length) rows.push(row);
-  return rows;
-}
-
-const CARD = { gapX: 24, gapY: S.gapY };
-
-function rowsHeight(n){ return n * CHIP.h + (n - 1) * CHIP.rowGap; }
-function cardHeightFor(rows){ return S.chipsTop + rowsHeight(rows) + S.bottom; }
 
 function iconMarkup(name, ox, oy, size, color){
   const s = size / 24;
   let body = "";
-  if (name === "code") body =
-    '<path d="M9.2 6.8 4.4 12l4.8 5.2"/><path d="M14.8 6.8 19.6 12l-4.8 5.2"/>';
-  else if (name === "layers") body =
-    '<path d="M12 3.6 3.4 8.2 12 12.8l8.6-4.6L12 3.6z"/><path d="M3.4 12.4 12 17l8.6-4.6"/><path d="M3.4 16.4 12 21l8.6-4.6"/>';
-  else if (name === "server") body =
-    '<rect x="3.6" y="4.6" width="16.8" height="6" rx="1.8"/><rect x="3.6" y="13.4" width="16.8" height="6" rx="1.8"/><path d="M7.2 7.6h.01"/><path d="M7.2 16.4h.01"/>';
-  else if (name === "wand") body =
-    '<path d="M4.4 19.6 13 11"/><path d="M16.4 3.4v4"/><path d="M14.4 5.4h4"/><path d="M19.6 10.2v2.6"/><path d="M18.3 11.5h2.6"/>';
-  else if (name === "mail") body =
+  if (name === "mail") body =
     '<rect x="2.8" y="5" width="18.4" height="14" rx="2.6"/><path d="M3.6 7 12 13l8.4-6"/>';
   else if (name === "linkedin") body =
     '<rect x="3.4" y="3.4" width="17.2" height="17.2" rx="4.2"/><path d="M7.8 10.6v6.2"/><path d="M7.8 8.1h.01"/><path d="M11.8 16.8v-3.4a2.4 2.4 0 0 1 4.8 0v3.4"/>';
@@ -104,61 +59,42 @@ function iconMarkup(name, ox, oy, size, color){
          '" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + body + '</g>';
 }
 
-function cardMarkup(x, y, w, h, card, pal){
-  const innerW = w - S.contentX - S.pad;
-  const rows = packChips(card.chips, innerW);
-  let s = "";
-
-  s += '<rect x="' + (x + 0.5) + '" y="' + (y + 0.5) + '" width="' + (w - 1) + '" height="' + (h - 1) +
-       '" rx="' + S.radius + '" fill="' + pal.card + '" stroke="' + pal.cardBorder + '"/>';
-
-  s += '<rect x="' + (x + S.pad + 0.5) + '" y="' + (y + S.iconTop + 0.5) + '" width="' + (S.iconBox - 1) +
-       '" height="' + (S.iconBox - 1) + '" rx="' + S.iconRadius + '" fill="' + pal.iconBg +
-       '" stroke="' + card.accent + '" stroke-opacity="0.55"/>';
-  s += iconMarkup(card.icon, x + S.pad + S.iconInset, y + S.iconTop + S.iconInset, S.iconSize, card.accent);
-
-  s += '<text x="' + (x + S.contentX) + '" y="' + (y + S.titleBase) + '" font-family="' + FONT +
-       '" font-size="' + S.titleFont + '" font-weight="600" letter-spacing="-0.2" fill="' + pal.title + '">' + esc(card.title) + '</text>';
-
-  let cy = y + S.chipsTop;
-  rows.forEach(function(r, ri){
-    let cxp = x + S.contentX;
-    r.forEach(function(c, ci){
-      const featured = (ri === 0 && ci === 0);
-      const bg = featured ? pal.chipFgBg : pal.chipBg;
-      const bd = featured ? card.accent : pal.chipBorder;
-      const fg = featured ? pal.chipFgText : pal.chipText;
-      const bo = featured ? ' stroke-opacity="0.9"' : "";
-      s += '<rect x="' + (cxp + 0.5) + '" y="' + (cy + 0.5) + '" width="' + (c.w - 1) + '" height="' + (CHIP.h - 1) +
-           '" rx="' + CHIP.radius + '" fill="' + bg + '" stroke="' + bd + '"' + bo + '/>';
-      s += '<text x="' + (cxp + c.w / 2) + '" y="' + (cy + S.chipTextBase) + '" text-anchor="middle" font-family="' + FONT +
-           '" font-size="' + CHIP.font + '" font-weight="' + CHIP.weight + '" fill="' + fg + '">' + esc(c.t) + '</text>';
-      cxp += c.w + CHIP.gap;
-    });
-    cy += CHIP.h + CHIP.rowGap;
-  });
-
-  return s;
-}
-
 function svgOpen(w, h, label){
   return '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h +
          '" role="img" aria-label="' + esc(label) + '">';
 }
 
-function buildStackColumn(W, pal){
-  // Must match cardMarkup's inner width exactly, or card heights are computed
-  // for a different number of chip rows than are actually drawn.
-  const innerW = W - S.contentX - S.pad;
-  const heights = CARDS.map(function(c){ return cardHeightFor(packChips(c.chips, innerW).length); });
-  const total = heights.reduce(function(a, b){ return a + b; }, 0) + CARD.gapY * (CARDS.length - 1);
+/**
+ * Draws the stack as brand tiles.
+ * The strip is centred inside W, so it stays aligned when the count changes.
+ */
+function buildLogoStrip(W, cols, tile, gap, mode, pal){
+  const rows = Math.ceil(STACK.length / cols);
+  const contentW = cols * tile + (cols - 1) * gap;
+  const x0 = (W - contentW) / 2;
+  const H = rows * tile + (rows - 1) * gap;
+  const radius = Math.round(tile * 0.25);
+  const label = "Tech stack: " + STACK.map(function(l){ return l.name; }).join(", ") + ".";
 
-  let s = svgOpen(W, total, "Tech stack and tools");
-  let y = 0;
-  CARDS.forEach(function(c, i){
-    s += cardMarkup(0, y, W, heights[i], c, pal);
-    y += heights[i] + CARD.gapY;
+  let s = svgOpen(W, H, label);
+
+  STACK.forEach(function(logo, i){
+    const d = LOGO_PATHS[logo.slug];
+    if (!d || d.indexOf("ERROR:") === 0){ return; }
+
+    const tx = x0 + (i % cols) * (tile + gap);
+    const ty = Math.floor(i / cols) * (tile + gap);
+    const color = logo[mode] || pal.fg;
+
+    s += '<rect x="' + (tx + 0.5) + '" y="' + (ty + 0.5) + '" width="' + (tile - 1) + '" height="' + (tile - 1) +
+         '" rx="' + radius + '" fill="' + pal.tile + '" stroke="' + pal.tileBorder + '"/>';
+
+    const g = tile * 0.5;
+    const scale = (g / 24).toFixed(4);
+    s += '<g transform="translate(' + (tx + (tile - g) / 2) + ',' + (ty + (tile - g) / 2) + ') scale(' + scale +
+         ')" fill="' + color + '"><path d="' + d + '"/></g>';
   });
+
   return s + '</svg>';
 }
 
@@ -182,9 +118,9 @@ function buildContact(item, pal){
 
 const files = [];
 ["dark","light"].forEach(function(t){
-  // Desktop is one full width card per row; phones still get the compact 360 column.
-  files.push({ name: "stack-" + t + ".svg",        data: buildStackColumn(860, P[t]) });
-  files.push({ name: "stack-narrow-" + t + ".svg", data: buildStackColumn(360, P[t]) });
+  // One strip on desktop, two balanced rows on phones.
+  files.push({ name: "logos-" + t + ".svg",        data: buildLogoStrip(860, 10, 64, 14, t, P[t]) });
+  files.push({ name: "logos-narrow-" + t + ".svg", data: buildLogoStrip(360, 5, 56, 12, t, P[t]) });
   CONTACT.forEach(function(item){
     files.push({ name: item.file + "-" + t + ".svg", data: buildContact(item, P[t]) });
   });
