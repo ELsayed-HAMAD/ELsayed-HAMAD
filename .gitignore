@@ -1,0 +1,10 @@
+# Temporary browser profile used when rendering the cards locally
+tools/.cprof/
+tools/.chrome/
+
+# Transient files produced by the generator
+tools/_dom.html
+tools/_dom.err
+tools/_preview.html
+tools/_v.png
+tools/_live.png
