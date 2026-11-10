@@ -155,8 +155,8 @@ function buildStackWide(pal){
   return s + '</svg>';
 }
 
-function buildStackNarrow(pal){
-  const W = 360, innerW = W - CARD.pad * 2;
+function buildStackColumn(W, pal){
+  const innerW = W - CARD.pad * 2;
   const heights = CARDS.map(function(c){ return cardHeightFor(packChips(c.chips, innerW).length, GEO.chipsTop); });
   const total = heights.reduce(function(a, b){ return a + b; }, 0) + CARD.gapY * (CARDS.length - 1);
 
@@ -189,12 +189,9 @@ function buildContact(item, pal){
 
 const files = [];
 ["dark","light"].forEach(function(t){
-  files.push({ name: "stack-dark.svg",    data: buildStackWide(P[t]) });
-});
-files.length = 0;
-["dark","light"].forEach(function(t){
-  files.push({ name: "stack-" + t + ".svg",         data: buildStackWide(P[t]) });
-  files.push({ name: "stack-narrow-" + t + ".svg",  data: buildStackNarrow(P[t]) });
+  // Desktop is one full width card per row; phones still get the compact 360 column.
+  files.push({ name: "stack-" + t + ".svg",        data: buildStackColumn(860, P[t]) });
+  files.push({ name: "stack-narrow-" + t + ".svg", data: buildStackColumn(360, P[t]) });
   CONTACT.forEach(function(item){
     files.push({ name: item.file + "-" + t + ".svg", data: buildContact(item, P[t]) });
   });
