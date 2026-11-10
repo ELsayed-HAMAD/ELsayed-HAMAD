@@ -11,7 +11,7 @@ I build web products end to end, from the database schema to the interface. Most
 **[Asas](https://github.com/ELsayed-HAMAD/Asas)** · [live](https://asas-sigma-wheat.vercel.app)  
 Multi-tenant ERP for finance, inventory, HR, CRM, and operations. Payroll, the general ledger, and stock movement share one tenant-aware data model. React 19, Fastify, Prisma, PostgreSQL.
 
-**[Take-Home-Bundle-Builder-](https://github.com/ELsayed-HAMAD/Take-Home-Bundle-Builder-)**  
+**[Bundle Builder](https://github.com/ELsayed-HAMAD/Take-Home-Bundle-Builder-)**  
 Four-step bundle configurator with a review panel that stays in sync as the selection changes. React, Vite.
 
 **[NextWatch](https://github.com/ELsayed-HAMAD/NextWatch)**  
