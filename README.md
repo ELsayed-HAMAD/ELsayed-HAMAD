@@ -6,27 +6,15 @@
 
 I build web products end to end, from the database schema to the interface. Most of my work sits in React and TypeScript on the front, and Fastify with Prisma against PostgreSQL on the back.
 
-## Work
+## Tech Stack and Tools
 
-**[Asas](https://github.com/ELsayed-HAMAD/Asas)** · [live](https://asas-sigma-wheat.vercel.app)  
-Multi-tenant ERP for finance, inventory, HR, CRM, and operations. Payroll, the general ledger, and stock movement share one tenant-aware data model. React 19, Fastify, Prisma, PostgreSQL.
+**Languages**  HTML5 · CSS3 · JavaScript · TypeScript · SQL  
+**Frontend**  React.js · React Router · TanStack Query · Zustand · Tailwind CSS · Bootstrap · GSAP · Swiper.js  
+**Backend**  Node.js · Fastify · Prisma · Zod  
+**Database**  PostgreSQL  
+**Testing**  Vitest · Playwright  
+**Tooling**  Git · GitHub Actions · pnpm · Turborepo · Docker · Vercel · VS Code
 
-**[Bundle Builder](https://github.com/ELsayed-HAMAD/Take-Home-Bundle-Builder-)**  
-Four-step bundle configurator with a review panel that stays in sync as the selection changes. React, Vite.
+## Contact Me
 
-**[NextWatch](https://github.com/ELsayed-HAMAD/NextWatch)**  
-Film discovery app with search, poster browsing, and cast and crew detail. React, Vite, Tailwind CSS, React Router.
-
-**[Playcore](https://github.com/ELsayed-HAMAD/Playcore)**  
-Multi-page game storefront covering deals, new releases, trending, library, and sign in. HTML, CSS, JavaScript.
-
-## Stack
-
-**Languages**  TypeScript · JavaScript · SQL  
-**Frontend**  React 19 · Vite · Tailwind CSS  
-**Backend**  Fastify · Node.js · Prisma  
-**Data**  PostgreSQL
-
-## Contact
-
-[elsayedhamad67@gmail.com](mailto:elsayedhamad67@gmail.com)
+[elsayedhamad67@gmail.com](mailto:elsayedhamad67@gmail.com) · [LinkedIn](https://www.linkedin.com/in/elsayed-hamad-866340322) · [GitHub](https://github.com/ELsayed-HAMAD)
